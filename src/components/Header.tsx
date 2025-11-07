@@ -1,9 +1,18 @@
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Edit, Save } from "lucide-react";
 import { useState } from "react";
+import { useEditMode } from "@/contexts/EditModeContext";
+import ImportExportData from "./ImportExportData";
+import { PortfolioData } from "@/types/portfolio";
 
-const Header = () => {
+interface HeaderProps {
+  portfolioData: PortfolioData;
+  onImportData: (data: PortfolioData) => void;
+}
+
+const Header = ({ portfolioData, onImportData }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isEditMode, setIsEditMode } = useEditMode();
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -25,8 +34,12 @@ const Header = () => {
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
-            <h1 className="text-xl font-bold text-foreground">Audrey Gruneisen</h1>
-            <p className="text-sm text-muted-foreground">Chef de Projet IA</p>
+            <h1 className="text-xl font-bold text-foreground">
+              {portfolioData.personalInfo.name}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              {portfolioData.personalInfo.title}
+            </p>
           </div>
 
           {/* Desktop Navigation */}
@@ -40,6 +53,27 @@ const Header = () => {
                 {item.label}
               </button>
             ))}
+            <div className="flex items-center gap-2 ml-4 border-l border-border pl-4">
+              {isEditMode && <ImportExportData data={portfolioData} onImport={onImportData} />}
+              <Button
+                variant={isEditMode ? "default" : "outline"}
+                size="sm"
+                onClick={() => setIsEditMode(!isEditMode)}
+                className={isEditMode ? "gradient-primary shadow-elegant gap-2" : "gap-2"}
+              >
+                {isEditMode ? (
+                  <>
+                    <Save className="h-4 w-4" />
+                    Mode Édition
+                  </>
+                ) : (
+                  <>
+                    <Edit className="h-4 w-4" />
+                    Mode Édition
+                  </>
+                )}
+              </Button>
+            </div>
           </div>
 
           {/* Mobile Menu Button */}
@@ -65,6 +99,31 @@ const Header = () => {
                 {item.label}
               </button>
             ))}
+            <div className="pt-2 border-t border-border space-y-2">
+              <Button
+                variant={isEditMode ? "default" : "outline"}
+                size="sm"
+                onClick={() => setIsEditMode(!isEditMode)}
+                className={isEditMode ? "gradient-primary w-full gap-2" : "w-full gap-2"}
+              >
+                {isEditMode ? (
+                  <>
+                    <Save className="h-4 w-4" />
+                    Mode Édition
+                  </>
+                ) : (
+                  <>
+                    <Edit className="h-4 w-4" />
+                    Mode Édition
+                  </>
+                )}
+              </Button>
+              {isEditMode && (
+                <div className="flex gap-2">
+                  <ImportExportData data={portfolioData} onImport={onImportData} />
+                </div>
+              )}
+            </div>
           </div>
         )}
       </nav>

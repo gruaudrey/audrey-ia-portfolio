@@ -6,13 +6,24 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Mail, Linkedin, Github, Send } from "lucide-react";
 import { toast } from "sonner";
+import { ContactInfo } from "@/types/portfolio";
+import { useEditMode } from "@/contexts/EditModeContext";
+import EditButton from "./EditButton";
+import ContactModal from "./modals/ContactModal";
 
-const ContactSection = () => {
+interface ContactSectionProps {
+  contactInfo: ContactInfo;
+  onUpdateContact: (info: ContactInfo) => void;
+}
+
+const ContactSection = ({ contactInfo, onUpdateContact }: ContactSectionProps) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
+  const { isEditMode } = useEditMode();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,12 +32,15 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-20 px-4">
+    <section id="contact" className={`py-20 px-4 ${isEditMode ? "border-2 border-dashed border-primary/50 rounded-lg" : ""}`}>
       <div className="container mx-auto max-w-5xl">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Contact
-          </h2>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground">
+              Contact
+            </h2>
+            {isEditMode && <EditButton onClick={() => setIsModalOpen(true)} />}
+          </div>
           <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Vous avez un projet ou une question ? N'hésitez pas à me contacter !
@@ -84,14 +98,14 @@ const ContactSection = () => {
               </h3>
               <div className="space-y-4">
                 <a
-                  href="mailto:audrey.gruneisen@example.com"
+                  href={`mailto:${contactInfo.email}`}
                   className="flex items-center gap-3 p-4 rounded-lg bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors group"
                 >
                   <Mail className="h-5 w-5" />
-                  <span className="font-medium">audrey.gruneisen@example.com</span>
+                  <span className="font-medium">{contactInfo.email}</span>
                 </a>
                 <a
-                  href="https://linkedin.com/in/audrey-gruneisen"
+                  href={contactInfo.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-4 rounded-lg bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors group"
@@ -100,7 +114,7 @@ const ContactSection = () => {
                   <span className="font-medium">LinkedIn</span>
                 </a>
                 <a
-                  href="https://github.com/audrey-gruneisen"
+                  href={contactInfo.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-4 rounded-lg bg-secondary hover:bg-primary hover:text-primary-foreground transition-colors group"
@@ -116,13 +130,19 @@ const ContactSection = () => {
                 Disponibilité
               </h3>
               <p className="text-foreground leading-relaxed">
-                Actuellement en alternance et ouverte aux opportunités de collaboration 
-                sur des projets IA innovants dans le domaine de l'éducation.
+                {contactInfo.availability}
               </p>
             </Card>
           </div>
         </div>
       </div>
+
+      <ContactModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={onUpdateContact}
+        info={contactInfo}
+      />
     </section>
   );
 };

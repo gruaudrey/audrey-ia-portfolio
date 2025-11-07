@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Project } from "./ProjectsSection";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Project } from "@/types/portfolio";
 
 interface ProjectModalProps {
   isOpen: boolean;
@@ -20,6 +21,8 @@ const ProjectModal = ({ isOpen, onClose, onSave, project }: ProjectModalProps) =
     technologies: "",
     githubUrl: "",
     demoUrl: "",
+    imageUrl: "",
+    status: "en-cours" as Project["status"],
   });
 
   useEffect(() => {
@@ -30,6 +33,8 @@ const ProjectModal = ({ isOpen, onClose, onSave, project }: ProjectModalProps) =
         technologies: project.technologies.join(", "),
         githubUrl: project.githubUrl || "",
         demoUrl: project.demoUrl || "",
+        imageUrl: project.imageUrl || "",
+        status: project.status,
       });
     } else {
       setFormData({
@@ -38,6 +43,8 @@ const ProjectModal = ({ isOpen, onClose, onSave, project }: ProjectModalProps) =
         technologies: "",
         githubUrl: "",
         demoUrl: "",
+        imageUrl: "",
+        status: "en-cours",
       });
     }
   }, [project]);
@@ -50,6 +57,8 @@ const ProjectModal = ({ isOpen, onClose, onSave, project }: ProjectModalProps) =
       technologies: formData.technologies.split(",").map((t) => t.trim()),
       githubUrl: formData.githubUrl || undefined,
       demoUrl: formData.demoUrl || undefined,
+      imageUrl: formData.imageUrl || undefined,
+      status: formData.status,
     };
 
     if (project) {
@@ -117,6 +126,34 @@ const ProjectModal = ({ isOpen, onClose, onSave, project }: ProjectModalProps) =
               onChange={(e) => setFormData({ ...formData, demoUrl: e.target.value })}
               placeholder="https://demo.com/..."
             />
+          </div>
+          <div>
+            <Label htmlFor="imageUrl">URL de l'image</Label>
+            <Input
+              id="imageUrl"
+              type="url"
+              value={formData.imageUrl}
+              onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+              placeholder="https://..."
+            />
+          </div>
+          <div>
+            <Label htmlFor="status">Statut *</Label>
+            <Select
+              value={formData.status}
+              onValueChange={(value: Project["status"]) =>
+                setFormData({ ...formData, status: value })
+              }
+            >
+              <SelectTrigger id="status">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en-cours">En cours</SelectItem>
+                <SelectItem value="terminé">Terminé</SelectItem>
+                <SelectItem value="en-pause">En pause</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex gap-3 justify-end pt-4">
             <Button type="button" variant="outline" onClick={onClose}>

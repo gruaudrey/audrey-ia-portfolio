@@ -1,52 +1,38 @@
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Code2, Wrench, BookOpen } from "lucide-react";
+import { Code2, Wrench, BookOpen, Brain, Target } from "lucide-react";
+import { SkillCategory } from "@/types/portfolio";
+import { useEditMode } from "@/contexts/EditModeContext";
+import EditButton from "./EditButton";
+import SkillsModal from "./modals/SkillsModal";
 
-const SkillsSection = () => {
-  const skillCategories = [
-    {
-      icon: Code2,
-      title: "Technologies",
-      skills: [
-        "Python",
-        "n8n",
-        "Qdrant",
-        "OpenAI API",
-        "Streamlit",
-        "React",
-        "Git/GitHub",
-      ],
-    },
-    {
-      icon: BookOpen,
-      title: "Méthodologies",
-      skills: [
-        "Approche par Compétences (AEC)",
-        "Ingénierie Rapide Inversée (IRI)",
-        "Taxonomie de Bloom",
-        "Priorisation RICE",
-        "Analyse des besoins",
-      ],
-    },
-    {
-      icon: Wrench,
-      title: "Outils & Compétences",
-      skills: [
-        "Gestion de projet agile",
-        "Déploiement (Render)",
-        "Documentation technique",
-        "Tests utilisateurs",
-        "Veille technologique",
-      ],
-    },
-  ];
+interface SkillsSectionProps {
+  skillCategories: SkillCategory[];
+  onUpdateSkills: (categories: SkillCategory[]) => void;
+}
+
+const SkillsSection = ({ skillCategories, onUpdateSkills }: SkillsSectionProps) => {
+  const { isEditMode } = useEditMode();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const iconMap: Record<string, any> = {
+    Code2,
+    BookOpen,
+    Wrench,
+    Brain,
+    Target,
+  };
 
   return (
-    <section id="skills" className="py-20 px-4 bg-muted/30">
+    <section id="skills" className={`py-20 px-4 bg-muted/30 ${isEditMode ? "border-2 border-dashed border-primary/50 rounded-lg" : ""}`}>
       <div className="container mx-auto">
         <div className="text-center mb-16 animate-fade-in">
-          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-            Compétences
-          </h2>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground">
+              Compétences
+            </h2>
+            {isEditMode && <EditButton onClick={() => setIsModalOpen(true)} />}
+          </div>
           <div className="w-20 h-1 bg-primary mx-auto mb-6"></div>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Un ensemble de compétences techniques et méthodologiques 
@@ -56,10 +42,10 @@ const SkillsSection = () => {
 
         <div className="grid md:grid-cols-3 gap-8">
           {skillCategories.map((category, index) => {
-            const Icon = category.icon;
+            const Icon = iconMap[category.icon] || Code2;
             return (
               <Card
-                key={index}
+                key={category.id}
                 className="p-8 shadow-elegant hover:shadow-glow transition-all animate-fade-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
@@ -87,6 +73,13 @@ const SkillsSection = () => {
           })}
         </div>
       </div>
+
+      <SkillsModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={onUpdateSkills}
+        categories={skillCategories}
+      />
     </section>
   );
 };
