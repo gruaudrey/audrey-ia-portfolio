@@ -22,7 +22,8 @@ const PersonalInfoModal = ({ isOpen, onClose, onSave, info }: PersonalInfoModalP
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+    // Préserver la photo originale
+    onSave({ ...formData, photoUrl: info.photoUrl });
     onClose();
   };
 
@@ -70,16 +71,6 @@ const PersonalInfoModal = ({ isOpen, onClose, onSave, info }: PersonalInfoModalP
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               required
               rows={4}
-            />
-          </div>
-          <div>
-            <Label htmlFor="photoUrl">URL de la photo</Label>
-            <Input
-              id="photoUrl"
-              type="url"
-              value={formData.photoUrl}
-              onChange={(e) => setFormData({ ...formData, photoUrl: e.target.value })}
-              placeholder="https://..."
             />
           </div>
           <div className="flex gap-3 justify-end pt-4">
