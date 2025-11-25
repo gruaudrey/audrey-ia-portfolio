@@ -1,5 +1,4 @@
 import { PortfolioData } from "@/types/portfolio";
-import profilePhoto from "@/assets/profile-photo.png";
 
 export const defaultPortfolioData: PortfolioData = {
   personalInfo: {
@@ -7,7 +6,7 @@ export const defaultPortfolioData: PortfolioData = {
     title: "Chef de Projet IA",
     subtitle: "Spécialiste en solutions éducatives innovantes",
     description: "Passionnée par l'innovation pédagogique, je conçois et pilote des projets IA qui transforment l'apprentissage. Mon expertise combine gestion de projet agile et technologies de pointe pour créer des solutions éducatives impactantes.",
-    photoUrl: profilePhoto,
+    photoUrl: "https://drive.google.com/uc?export=view&id=11qoC8GnOANZwa_tOtXJwKQkzUqpyA_my",
   },
   projects: [
     {
