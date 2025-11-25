@@ -1,5 +1,5 @@
 import { PortfolioData } from "@/types/portfolio";
-import profilePhoto from "@/assets/profile-photo.jpg";
+import profilePhoto from "@/assets/profile-photo.png";
 
 export const defaultPortfolioData: PortfolioData = {
   personalInfo: {
