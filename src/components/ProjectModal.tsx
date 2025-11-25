@@ -71,7 +71,7 @@ const ProjectModal = ({ isOpen, onClose, onSave, project }: ProjectModalProps) =
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl">
             {project ? "Modifier le projet" : "Ajouter un projet"}
